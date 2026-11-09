@@ -12,7 +12,8 @@ paired-bootstrap 95% CIs over segments (20k resamples).
 | system | WER | vs Rani (95% CI) |
 |---|---|---|
 | Rani, no language model | 33.51 | |
-| IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony) | 37.89 | +4.36 (+1.91, +6.85) |
+| Kriti-Telephony v2 (Naamche Labs), beam search width 4 | 32.49 | -1.05 (-3.07, +0.98) |
+| Kriti-Telephony v1 (Naamche Labs) | 37.89 | +4.36 (+1.91, +6.85) |
 | NepaliConformer offline | 39.71 | +6.20 (+3.22, +9.02) |
 | IndicConformer Nepali | 47.60 | +14.08 (+10.42, +17.96) |
 
@@ -31,16 +32,16 @@ reviewed against the audio by a native speaker (49/57 of the newest batch accept
 
 | system | audio | WER | CER | sub | del | ins |
 |---|---|---|---|---|---|---|
-| [**IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony)**](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs, 119M) — released checkpoint, our decode | canonical | **34.48** | — | 22.95 | 6.86 | 4.67 |
+| [**Kriti-Telephony (Naamche Labs)**](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs, 119M) — released checkpoint, our decode | canonical | **34.48** | — | 22.95 | 6.86 | 4.67 |
 | **nepali-conformer-offline** (ours) — re-decoded from the released weights | canonical | **36.29** | — | 23.87 | 8.21 | 4.21 |
 | teacher-v2 (ours, rejected lineage) | canonical | 34.69 | 17.75 | 22.57 | 8.97 | 3.16 |
-| [IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony)](https://github.com/Naamche-Labs/kriti) (Naamche Labs, 119M, IndicConformer fine-tune) | canonical | 40.59 | — | 24.59 | 13.81 | 2.19 |
+| [Kriti (base)](https://github.com/Naamche-Labs/kriti) (Naamche Labs, 119M) | canonical | 40.59 | — | 24.59 | 13.81 | 2.19 |
 | **nepali-conformer-streaming** (ours, 520 ms) | canonical | 59.87 | 41.08 | 36.55 | 22.32 | 1.01 |
 | MMS-1B-all (Meta, `npi` adapter, zero-shot) | canonical | 81.01 | — | — | — | — |
 | Whisper-large-v3, zero-shot, anti-hallucination tuned | canonical | 96.29 | — | — | — | — |
 | Whisper-large-v3, zero-shot, defaults† | canonical | 107.49 | — | — | — | — |
 | IndicWav2Vec-Nepali (community mirror of the AI4Bharat fine-tune) | canonical | 86.57 | — | — | — | — |
-| *IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony) — authors' submitted outputs (PR #2), decoded on their reconstruction of the gated source audio* | reconstructed | *32.38* | *14.36* | 23.12 | 5.89 | 3.37 |
+| *Kriti-Telephony (Naamche Labs) — authors' submitted outputs (PR #2), decoded on their reconstruction of the gated source audio* | reconstructed | *32.38* | *14.36* | 23.12 | 5.89 | 3.37 |
 | *nepali-conformer-offline — outputs published 2026-08, not reproducible from the released weights* | canonical | *33.81* | *16.63* | 22.86 | 7.41 | 3.54 |
 
 *Correction note (2026-09-07).* Our published `nepali-conformer-offline.json` scored 33.81 but
@@ -49,7 +50,7 @@ does not reproduce from the released checkpoint: a fresh greedy decode of
 hypotheses match the published file. That file came from a training state that was never
 shipped. It is retained as `benchmark/outputs_v0.1/nepali-conformer-offline.published-2026-08.unreproduced.json`
 and `benchmark/outputs_v0.1/nepali-conformer-offline.json` is now the reproducible decode. Every delta
-below is against the reproducible baseline. Separately, IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony)'s submitted outputs were
+below is against the reproducible baseline. Separately, Kriti-Telephony (Naamche Labs)'s submitted outputs were
 produced on audio reconstructed from the gated vendor source with their own chunker (documented
 in their repository); the same released checkpoint decoded on the canonical wavs scores 34.48,
 with 2 of 77 hypotheses identical between the two runs — reconstruction drift is worth about 2
@@ -70,13 +71,13 @@ it is retained only as the before/after of anti-hallucination decoding, not as a
 `benchmark/outputs_v0.1/`.
 
 Paired bootstrap deltas vs our **reproducible** offline decode (36.29), same canonical audio:
-IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony) **−1.8 [−3.9, +0.2]** (statistical tie, lower point estimate); IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony)
+Kriti-Telephony (Naamche Labs) **−1.8 [−3.9, +0.2]** (statistical tie, lower point estimate); Kriti (base)
 **+4.3 [+1.7, +7.2]** (significant); teacher-v2 **−1.6 [−3.6, +0.4]** (statistical tie);
 streaming **+23.6 [+20.5, +26.8]**; our unreproduced August file **−2.5 [−4.0, −1.0]**. The
 authors' reconstructed-audio row (32.38) is not paired-comparable with any canonical-audio row:
 the segment boundaries differ, so a per-segment bootstrap between the two is not meaningful.
 
-*IndicConformer Finetune + NepaliConformer Distilled (KritiTelephony) row methodology: their published checkpoint reduced to Nepali-only exactly as their
+*Kriti (base) row methodology: their published checkpoint reduced to Nepali-only exactly as their
 own loader does (first-257 embedding rows, `ne` joint head, CTC head dropped — see their
 `src/kriti/model.py`), decoded greedily in mainline NeMo; weight surgery verified
 `missing=0 unexpected=0`. Their outputs: `benchmark/outputs_v0.1/kriti-naamche.json`.*

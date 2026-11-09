@@ -32,7 +32,8 @@ ranked entrant on this set.
 | system | mistakes per 100 words ↓ | gap to Rani (95% CI) |
 |---|---|---|
 | **Rani** (no language model) | **33.5** | |
-| IndicConformer Finetune + NepaliConformer Distilled ([KritiTelephony](https://github.com/Naamche-Labs/kriti-telephony)) | 37.9 | +4.4 (+1.9, +6.9) |
+| [Kriti-Telephony v2](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs), beam search width 4 | 32.5 | -1.0 (-3.1, +1.0) |
+| [Kriti-Telephony v1](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs) | 37.9 | +4.4 (+1.9, +6.9) |
 | NepaliConformer offline (our previous model) | 39.7 | +6.2 (+3.2, +9.0) |
 | IndicConformer Nepali (AI4Bharat) | 47.6 | +14.1 (+10.4, +18.0) |
 
@@ -43,7 +44,7 @@ v0.1 files are kept as `benchmark/references_v0.1.json` and `benchmark/outputs_v
 
 ## Clean speech
 
-| test | Rani (language model) | IndicConformer Finetune + NepaliConformer Distilled ([KritiTelephony](https://github.com/Naamche-Labs/kriti-telephony)) | IndicConformer |
+| test | Rani (language model) | [Kriti-Telephony](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs) | IndicConformer |
 |---|---|---|---|
 | PVSpeech, 93 clean read sentences (mistakes per 100 letters) | **3.6** | 3.8 | 9.8 |
 | FLEURS Nepali test, 726 sentences (mistakes per 100 letters) | 10.4 | 9.9 | **7.4** |
@@ -62,7 +63,7 @@ Greedy transducer decoding on one CPU thread of an Apple M2 Ultra, batch size 1.
 | NepaliConformer offline | 27.1 | 0.33 s | 3.5 s | 1.9 GB |
 | AI4Bharat IndicConformer | 21.1 | 0.41 s | 4.3 s | 1.8 GB |
 | Rani-IndicConformer | 20.8 | 0.38 s | 4.3 s | 1.8 GB |
-| IndicConformer Finetune + NepaliConformer Distilled ([KritiTelephony](https://github.com/Naamche-Labs/kriti-telephony)) | 19.1 | 0.37 s | 4.3 s | 2.0 GB |
+| [Kriti-Telephony](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs) | 19.1 | 0.37 s | 4.3 s | 2.0 GB |
 
 × real time is over 25 public NepTel clips, 622.72 s of audio. First text is the median of 5 runs. Rani and NepaliConformer offline ran on NeMo 3.0.0, the others on NeMo 1.23.0rc0, so the gap is not purely the model. The machine was also running other work. Rani decodes offline, so text arrives when the clip ends, not while you speak. With 4 threads Rani reaches 34.5 times real time.
 
@@ -138,8 +139,8 @@ python streaming/hybrid_stream_server.py --nemo rani-asr/nepali-conformer-stream
 
 ## The one-paragraph honest summary
 
-Rani leads NepTel 0.2 among systems that were not used to draft its references, and is clearly ahead on 127 private customer-service calls it never saw (30.6 mistakes per 100 words, against 38.9 for IndicConformer and 43.0 for IndicConformer Finetune + NepaliConformer Distilled ([KritiTelephony](https://github.com/Naamche-Labs/kriti-telephony))). Those references are machine-made and not publicly checkable.
-On clean read Nepali, with a language model, it is level with IndicConformer Finetune + NepaliConformer Distilled ([KritiTelephony](https://github.com/Naamche-Labs/kriti-telephony)) on PVSpeech and close on FLEURS.
+Rani leads NepTel 0.2 among systems that were not used to draft its references, and is clearly ahead on 127 private customer-service calls it never saw (30.6 mistakes per 100 words, against 38.9 for IndicConformer and 43.0 for [Kriti-Telephony](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs)). Those references are machine-made and not publicly checkable.
+On clean read Nepali, with a language model, it is level with [Kriti-Telephony](https://github.com/Naamche-Labs/kriti-telephony) (Naamche Labs) on PVSpeech and close on FLEURS.
 Rani's scores above use no language model unless stated.
 
 ## NepTel benchmark
