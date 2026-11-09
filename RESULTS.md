@@ -11,13 +11,27 @@ paired-bootstrap 95% CIs over segments (20k resamples).
 
 | system | WER | vs Rani (95% CI) |
 |---|---|---|
+| **Kriti-Telephony v2 (Naamche Labs)**, beam search width 4 | **32.49** | -1.05 (-3.07, +0.98) |
 | Rani, no language model | 33.51 | |
-| Kriti-Telephony v2 (Naamche Labs), beam search width 4 | 32.49 | -1.05 (-3.07, +0.98) |
 | Kriti-Telephony v1 (Naamche Labs) | 37.89 | +4.36 (+1.91, +6.85) |
 | NepaliConformer offline | 39.71 | +6.20 (+3.22, +9.02) |
 | IndicConformer Nepali | 47.60 | +14.08 (+10.42, +17.96) |
 
 Reproduce: `python eval/score_v02.py --hyp benchmark/outputs/<system>.json`.
+
+### Effect of the 0.1 to 0.2 reference change
+
+The 56 customer-support segments are the same audio in both versions. Between 0.1 and 0.2 their references changed by 36.5 word errors per 100 words (0.1 references scored against 0.2 references). Scored against the 0.1 references for those same 56 segments, with `score_v02.py` normalisation:
+
+| system | 56 calls, 0.1 references | 56 calls, 0.2 references |
+|---|---:|---:|
+| Kriti-Telephony v1 | **33.98** | 37.22 |
+| NepaliConformer offline | 34.79 | 41.78 |
+| Kriti-Telephony v2, beam search width 4 | 37.13 | **30.28** |
+| Rani | 37.59 | 30.39 |
+| IndicConformer Nepali | 43.72 | 38.42 |
+
+Which system ranks first on these calls depends on the reference version. Rankings on NepTel should be read together with the reference version they were scored on.
 
 ---
 

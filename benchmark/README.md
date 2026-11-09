@@ -15,8 +15,8 @@ python ../eval/score_v02.py --hyp outputs/rani.json
 
 | system | mistakes per 100 words | gap to Rani (95% CI) |
 |---|---:|---|
+| **Kriti-Telephony v2 (Naamche Labs)**, beam search width 4 | **32.5** | -1.0 (-3.1, +1.0) |
 | Rani, no language model | 33.5 | |
-| Kriti-Telephony v2 (Naamche Labs), beam search width 4 | 32.5 | -1.0 (-3.1, +1.0) |
 | Kriti-Telephony v1 (Naamche Labs) | 37.9 | +4.4 (+1.9, +6.9) |
 | NepaliConformer offline | 39.7 | +6.2 (+3.2, +9.0) |
 | AI4Bharat IndicConformer | 47.6 | +14.1 (+10.4, +18.0) |
